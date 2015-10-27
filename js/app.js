@@ -16,7 +16,7 @@ var Enemy = function() {
     this.sprite = 'images/enemy-bug.png';
     this.speed = Math.random()*100; //choose random speed for each instance
     this.x = 0; //or might need to be negative
-    this.y = Math.floor(Math.random() * 606 + 1); //completely random y position to begin with, need to set to rows
+    this.y = (Math.floor(Math.random() * 3) + 1 ) * 83 - 30 ; // pick row... 83 is row height. found -30 figure by trial and error...
 };
 
 // Update the enemy's position, required method for game
@@ -56,7 +56,9 @@ Player.prototype.update = function(dt){
 // Place the player object in a variable called player          ////
 var bug = new Enemy();
 var bug2 = new Enemy();
-var allEnemies = [bug, bug2];
+var bug3 = new Enemy();
+var bug4 = new Enemy();
+var allEnemies = [bug, bug2, bug3, bug4];
 
 ////use keyword new
 
