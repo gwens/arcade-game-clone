@@ -14,9 +14,13 @@ var Enemy = function() {
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
-    this.speed = Math.random()*150+50; //choose random speed for each instance
-    this.x = -100; //negative position so bugs start off screen
-    this.y = (Math.floor(Math.random() * 3) + 1 ) * 83 - 30 ; // pick row... 83 is row height. found -30 figure by trial and error...
+    this.initialize();
+};
+
+Enemy.prototype.initialize = function(){
+    this.speed = Math.random() * 150 + 50;
+    this.x = -100;
+    this.y = (Math.floor(Math.random() * 3 ) + 1) * 83 - 30; //choose random row
 };
 
 // Update the enemy's position, required method for game
@@ -26,11 +30,9 @@ Enemy.prototype.update = function(dt) {
     // which will ensure the game runs at the same speed for
     // all computers.
     
-    //if bug is off right of screen, move it back to left-hand side and randomize y position again
+    //if bug is off right of screen, move it back to left-hand side and initialize row and speed again
     if (this.x > 550){
-        this.speed = Math.random()*150+50;
-        this.x = -100;
-        this.y = (Math.floor(Math.random() * 3 ) + 1) * 83 - 30; //REFACTOR as reset function?
+        this.initialize();
     }
     else{
     //bugs move at a constant speed and do not affect each other (can overtake/overlap)
