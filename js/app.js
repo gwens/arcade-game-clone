@@ -8,12 +8,9 @@
 
 // Enemies our player must avoid
 var Enemy = function() {
-    // Variables applied to each of our instances go here,
-    // we've provided one for you to get started
-
-    // The image/sprite for our enemies, this uses
-    // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
+    this.width = 70;
+    this.height = 50;
     this.initialize();
 };
 
@@ -53,6 +50,8 @@ Enemy.prototype.render = function() {
 var Player = function(){
     this.sprite = 'images/char-boy.png';
     this.initialize();
+    this.width = 50;
+    this.height = 60;
 };
 
 Player.prototype.initialize = function(){
@@ -78,9 +77,11 @@ Player.prototype.handleInput = function(keypress){
 };
 
 Player.prototype.update = function(dt){
+    //win if you reach the water
     if (this.y <= -30){
         this.initialize();
     }
+    //don't go off screen
     else if(this.y > 83 * 4 + 53){
         this.y = 83 * 4 + 53;
     }
@@ -92,9 +93,22 @@ Player.prototype.update = function(dt){
     }
 };
 
-//cound refactor into a general sprite render method
+//could refactor into a general sprite render method
 Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+};
+
+
+function checkCollisions(){
+    for (i = 0; i < allEnemies.length; i++){
+        var enemy = allEnemies[i];
+        // bounding box collision detection
+        if (player.x < enemy.x + enemy.width  && player.x + enemy.width  > enemy.x &&
+        player.y < enemy.y + enemy.height && player.y + player.height > enemy.y) {
+            player.initialize();
+            //console.log('collision detected');
+        }
+    }
 };
 
 // Now instantiate your objects.
@@ -103,10 +117,10 @@ Player.prototype.render = function() {
 
 //there are only three bugs on screen at any one time
 
-var bug = new Enemy();
+var bug1 = new Enemy();
 var bug2 = new Enemy();
 var bug3 = new Enemy();
-var allEnemies = [bug, bug2, bug3];
+var allEnemies = [bug1, bug2, bug3];
 
 var player = new Player();
 
