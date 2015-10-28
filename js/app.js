@@ -50,15 +50,21 @@ Enemy.prototype.render = function() {
 // a handleInput() method.
 
 
-////start with Enemy as prototype or not?                   ////
-/*var Player = function(){
-
+var Player = function(){
+    this.sprite = 'images/char-boy.png';
+    this.x = 200;
+    this.y = 83 * 4 + 53;
 }
 
 Player.prototype.update = function(dt){
+    //does player move continuously or jump from square to square?
+    this.x = this.x;
+    this.y = this.y;
+}
 
-}*/
-
+Player.prototype.render = function() {
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+};
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
@@ -71,7 +77,7 @@ var bug2 = new Enemy();
 var bug3 = new Enemy();
 var allEnemies = [bug, bug2, bug3];
 
-
+var player = new Player();
 
 
 
