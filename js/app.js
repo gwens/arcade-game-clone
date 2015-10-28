@@ -52,14 +52,36 @@ Enemy.prototype.render = function() {
 
 var Player = function(){
     this.sprite = 'images/char-boy.png';
+    this.initialize();
+}
+
+Player.prototype.initialize = function(){
     this.x = 200;
     this.y = 83 * 4 + 53;
 }
 
+Player.prototype.handleInput = function(keypress){
+    switch(keypress){
+        case 'left':
+            this.x = this.x - 101;
+            break;
+        case 'right':
+            this.x = this.x + 101;
+            break;
+        case 'up':
+            this.y = this.y - 83;
+            break;
+        case 'down':
+            this.y = this.y + 83;
+            break;
+    }
+}
+
 Player.prototype.update = function(dt){
-    //does player move continuously or jump from square to square?
-    this.x = this.x;
-    this.y = this.y;
+    //does player move continuously or jump from square to square? ans: jumps, so can use same render method if I refactor
+    if (this.y <= -30){
+        this.initialize();
+    }
 }
 
 Player.prototype.render = function() {
@@ -83,7 +105,7 @@ var player = new Player();
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
-/*document.addEventListener('keyup', function(e) {
+document.addEventListener('keyup', function(e) {
     var allowedKeys = {
         37: 'left',
         38: 'up',
@@ -92,4 +114,4 @@ var player = new Player();
     };
 
     player.handleInput(allowedKeys[e.keyCode]);
-});*/
+});
