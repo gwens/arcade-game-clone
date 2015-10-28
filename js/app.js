@@ -14,8 +14,8 @@ var Enemy = function() {
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
-    this.speed = Math.random()*100; //choose random speed for each instance
-    this.x = 0; //or might need to be negative
+    this.speed = Math.random()*150+50; //choose random speed for each instance
+    this.x = -100; //negative position so bugs start off screen
     this.y = (Math.floor(Math.random() * 3) + 1 ) * 83 - 30 ; // pick row... 83 is row height. found -30 figure by trial and error...
 };
 
@@ -25,10 +25,17 @@ Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
-                                                            
+    
+    //if bug is off right of screen, move it back to left-hand side and randomize y position again
+    if (this.x > 550){
+        this.speed = Math.random()*150+50;
+        this.x = -100;
+        this.y = (Math.floor(Math.random() * 3 ) + 1) * 83 - 30; //REFACTOR as reset function?
+    }
+    else{
     //bugs move at a constant speed and do not affect each other (can overtake/overlap)
-    this.x = this.x + this.speed * dt;
-
+        this.x = this.x + this.speed * dt;
+    }                                                      
 };
 
 // Draw the enemy on the screen, required method for game
@@ -54,13 +61,13 @@ Player.prototype.update = function(dt){
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player          ////
+
+//there are only three bugs on screen at any one time
+
 var bug = new Enemy();
 var bug2 = new Enemy();
 var bug3 = new Enemy();
-var bug4 = new Enemy();
-var allEnemies = [bug, bug2, bug3, bug4];
-
-////use keyword new
+var allEnemies = [bug, bug2, bug3];
 
 
 
