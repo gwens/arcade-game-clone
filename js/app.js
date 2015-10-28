@@ -53,12 +53,12 @@ Enemy.prototype.render = function() {
 var Player = function(){
     this.sprite = 'images/char-boy.png';
     this.initialize();
-}
+};
 
 Player.prototype.initialize = function(){
     this.x = 200;
     this.y = 83 * 4 + 53;
-}
+};
 
 Player.prototype.handleInput = function(keypress){
     switch(keypress){
@@ -75,15 +75,24 @@ Player.prototype.handleInput = function(keypress){
             this.y = this.y + 83;
             break;
     }
-}
+};
 
 Player.prototype.update = function(dt){
-    //does player move continuously or jump from square to square? ans: jumps, so can use same render method if I refactor
     if (this.y <= -30){
         this.initialize();
     }
-}
+    else if(this.y > 83 * 4 + 53){
+        this.y = 83 * 4 + 53;
+    }
+    else if(this.x > 200 + 101 * 2){
+        this.x = 200 + 101 * 2;
+    }
+    else if(this.x < 200 - 101 * 2){
+        this.x = 200 - 101 * 2;
+    }
+};
 
+//cound refactor into a general sprite render method
 Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
