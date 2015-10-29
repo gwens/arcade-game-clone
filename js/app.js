@@ -16,33 +16,33 @@
 //star: 0.25 98:99
 //random numbers from 0 to 99
 
+var Gems = function(){
+    this.gemGrid = [[],[],[],[],[],[]]; //gemGrid[row][col]
+    this.initialize();
+};
 
-var gemGrid = [[],[],[],[],[],[]]; //gemGrid[row][col]
-
-
-//this can be called by the player initalize function, or by a level initialize
-var setGems = function(){
+Gems.prototype.initialize = function(){
     for (var i = 1; i < 4; i++){ //iterate over rows
         for (var j = 0; j < 5; j++){
             var random = Math.floor(Math.random()*100);
             switch(true){
                 case (random < 50):
-                gemGrid[i].push(0);
+                this.gemGrid[i][j] = 0;
                 break;
                 case (random < 70):
-                gemGrid[i].push(1);
+                this.gemGrid[i][j] = 1;
                 break;
                 case (random < 85):
-                gemGrid[i].push(2);
+                this.gemGrid[i][j] = 2;
                 break;
                 case (random < 95):
-                gemGrid[i].push(3);
+                this.gemGrid[i][j] = 3;
                 break;
                 case (random < 98):
-                gemGrid[i].push(4);
+                this.gemGrid[i][j] = 4;
                 break;
                 case (random < 100): //could also use default but reads weirdly
-                gemGrid[i].push(5);
+                this.gemGrid[i][j] = 5;
                 break;
             }
         }
@@ -131,6 +131,7 @@ Player.prototype.update = function(dt){
     //win if you reach the water
     if (this.row == 0){
         this.initialize();
+        gems.initialize();
     }
     //don't go off screen
     else if(this.row > 5){
@@ -143,7 +144,7 @@ Player.prototype.update = function(dt){
         this.col = 0;
     }
     //collect any gems
-    var pickup = gemGrid[this.row][this.col];
+    var pickup = gems.gemGrid[this.row][this.col];
     switch(pickup){
         case 1:
         this.score += 1;
@@ -163,7 +164,7 @@ Player.prototype.update = function(dt){
     }
     console.log("score is " + this.score + " lives " + this.lives);
     //cell is now empty
-    gemGrid[this.row][this.col] = 0;
+    gems.gemGrid[this.row][this.col] = 0;
     //update actual position
     this.x = this.col * 100;
     this.y = this.row * 83 - 30;
@@ -183,6 +184,8 @@ function checkCollisions(){
         player.y < enemy.y + enemy.height && player.y + player.height > enemy.y) {
             player.initialize();
             //console.log('collision detected');
+            player.lives -= 1;
+            gems.initialize();
         }
     }
 }
@@ -193,7 +196,7 @@ function checkCollisions(){
 
 //there are only three bugs on screen at any one time
 
-setGems();
+//setGems();
 //renderGems();
 
 var bug1 = new Enemy();
@@ -202,6 +205,7 @@ var bug3 = new Enemy();
 var allEnemies = [bug1, bug2, bug3];
 
 var player = new Player();
+var gems = new Gems();
 
 
 

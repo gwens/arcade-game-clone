@@ -133,7 +133,7 @@ var Engine = (function(global) {
                  * we're using them over and over.
                  */
                 ctx.drawImage(Resources.get(rowImages[row]), col * 101, row * 83);
-                var gemType = gemGrid[row][col];
+                var gemType = gems.gemGrid[row][col];
                 switch(gemType){
                     case 0:
                     break;
