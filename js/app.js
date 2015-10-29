@@ -96,6 +96,7 @@ var Player = function(){
     this.width = 50;
     this.height = 60;
     this.score = 0;
+    this.lives = 3;
 };
 
 Player.prototype.initialize = function(){
@@ -141,12 +142,29 @@ Player.prototype.update = function(dt){
     else if(this.col < 0){
         this.col = 0;
     }
-    //collect a gem if it's there
-    if (gemGrid[this.row][this.col] > 0){
-        this.score += gemGrid[this.row][this.col];
-        console.log(this.score);
-        gemGrid[this.row][this.col] = 0;
+    //collect any gems
+    var pickup = gemGrid[this.row][this.col];
+    switch(pickup){
+        case 1:
+        this.score += 1;
+        break;
+        case 2:
+        this.score += 2;
+        break;
+        case 3:
+        this.score += 5;
+        break;
+        case 4:
+        this.lives += 1;
+        break;
+        case 5:
+        //add code for invincibility
+        break;
     }
+    console.log("score is " + this.score + " lives " + this.lives);
+    //cell is now empty
+    gemGrid[this.row][this.col] = 0;
+    //update actual position
     this.x = this.col * 100;
     this.y = this.row * 83 - 30;
 };

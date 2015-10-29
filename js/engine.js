@@ -158,6 +158,11 @@ var Engine = (function(global) {
 
 
         renderEntities();
+
+        ctx.font = "30px Arial";
+        var scoreBoardText = "Score: " + player.score + "  Lives: " + player.lives;
+        ctx.clearRect(10, 50, 500, -40);
+        ctx.fillText(scoreBoardText,10,40);
     }
 
     /* This function is called by the render function and is called on each game
