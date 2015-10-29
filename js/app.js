@@ -16,7 +16,9 @@
 //star: 0.25 98:99
 //random numbers from 0 to 99
 
-var gemGrid = [[],[],[], [], [], []];
+
+var gemGrid = [[],[],[],[],[],[]]; //gemGrid[row][col]
+
 
 //this can be called by the player initalize function, or by a level initialize
 var setGems = function(){
@@ -46,40 +48,6 @@ var setGems = function(){
         }
     }
 };
-
-/*var renderGems = function(){
-    for (var i = 0; i < 3; i++){
-        for (var j = 0; j < 5; j++){
-            var gemx = i * 83 + 53;
-            var gemy = j * 100;
-            var type = gemGrid[i][j];
-            var image;
-            switch(type){
-                case 1:
-                image = 'images/gem-blue.png';
-                break;
-                case 2:
-                image = 'images/gem-green.png';
-                break;
-                case 3:
-                image = 'images/gem-orange.png';
-                break;
-                case 4:
-                image = 'images/heart.png';
-                break;
-                case 5:
-                image = 'images/star.png';
-                break;
-                default:
-                image = 'images/gem-blue.png';
-            }
-            function renderGem(){
-                ctx.drawImage(Resources.get('images/gem-blue.png'), gemx, gemy);
-            };
-            renderGem();
-        }
-    }
-};*/
 
 // Enemies our player must avoid
 var Enemy = function() {
@@ -127,13 +95,14 @@ var Player = function(){
     this.initialize();
     this.width = 50;
     this.height = 60;
+    this.score = 0;
 };
 
 Player.prototype.initialize = function(){
     this.col = 2;
-    this.row = 4;
+    this.row = 5;
     this.x = this.col * 100;
-    this.y = this.row * 83 + 53;
+    this.y = this.row * 83 - 30;
 };
 
 Player.prototype.handleInput = function(keypress){
@@ -159,12 +128,12 @@ Player.prototype.handleInput = function(keypress){
 
 Player.prototype.update = function(dt){
     //win if you reach the water
-    if (this.row < 0){
+    if (this.row == 0){
         this.initialize();
     }
     //don't go off screen
-    else if(this.row > 4){
-        this.row = 4;
+    else if(this.row > 5){
+        this.row = 5;
     }
     else if(this.col > 4){
         this.col = 4;
@@ -172,8 +141,14 @@ Player.prototype.update = function(dt){
     else if(this.col < 0){
         this.col = 0;
     }
+    //collect a gem if it's there
+    if (gemGrid[this.row][this.col] > 0){
+        this.score += gemGrid[this.row][this.col];
+        console.log(this.score);
+        gemGrid[this.row][this.col] = 0;
+    }
     this.x = this.col * 100;
-    this.y = this.row * 83 + 53;
+    this.y = this.row * 83 - 30;
 };
 
 //could refactor into a general sprite render method
