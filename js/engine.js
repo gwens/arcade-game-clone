@@ -160,7 +160,7 @@ var Engine = (function(global) {
         renderEntities();
 
         ctx.font = "30px Arial";
-        var scoreBoardText = "Score: " + player.score + "  Lives: " + player.lives;
+        var scoreBoardText = "Score: " + player.score + "  Lives: " + player.lives + "  Level: " + player.level;
         ctx.clearRect(10, 50, 500, -40);
         ctx.fillText(scoreBoardText,10,40);
     }

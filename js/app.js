@@ -58,7 +58,7 @@ var Enemy = function() {
 };
 
 Enemy.prototype.initialize = function(){
-    this.speed = Math.random() * 200 + 100; //make this a function of level? or make initialize a function of level
+    this.speed = Math.random() * player.level * 100 + 100; //make this a function of level? or make initialize a function of level
     this.x = -100;
     this.y = (Math.floor(Math.random() * 3 ) + 1) * 83 - 30; //choose random row
 };
@@ -97,6 +97,7 @@ var Player = function(){
     this.height = 60;
     this.score = 0;
     this.lives = 3;
+    this.level = 1;
 };
 
 Player.prototype.initialize = function(){
@@ -130,6 +131,7 @@ Player.prototype.handleInput = function(keypress){
 Player.prototype.update = function(dt){
     //win if you reach the water
     if (this.row == 0){
+        player.level += 1;
         this.initialize();
         gems.initialize();
     }
@@ -199,13 +201,15 @@ function checkCollisions(){
 //setGems();
 //renderGems();
 
+var gems = new Gems();
+var player = new Player();
 var bug1 = new Enemy();
 var bug2 = new Enemy();
 var bug3 = new Enemy();
 var allEnemies = [bug1, bug2, bug3];
 
-var player = new Player();
-var gems = new Gems();
+
+
 
 
 
