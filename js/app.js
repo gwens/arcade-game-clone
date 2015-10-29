@@ -1,8 +1,3 @@
-//implementing levels... level should affect the speed of the bugs
-//and a number in the top-right of the screen
-//and reset the gems
-//after 10 levels should complete the game
-
 //gems should appear randomly on the road at the beginning of each level
 //collecting a gem gives points that display in the top-right, next to a mini picture of a gem
 //points can be stored in the player object
@@ -21,33 +16,70 @@
 //star: 0.25 98:99
 //random numbers from 0 to 99
 
+var gemGrid = [[],[],[], [], [], []];
+
 //this can be called by the player initalize function, or by a level initialize
 var setGems = function(){
-    for (var i = 0; i < 5; i++){ //iterate over columns
-        for (var j = 0; j < 3; j++){ //rows
+    for (var i = 1; i < 4; i++){ //iterate over rows
+        for (var j = 0; j < 5; j++){
             var random = Math.floor(Math.random()*100);
             switch(true){
                 case (random < 50):
+                gemGrid[i].push(0);
                 break;
                 case (random < 70):
-                console.log("place blue gem at col" + i + "and row" + j);
+                gemGrid[i].push(1);
                 break;
                 case (random < 85):
-                console.log("place green gem at col" + i + "and row" + j);
+                gemGrid[i].push(2);
                 break;
                 case (random < 95):
-                console.log("place orange gem at col" + i + "and row" + j);
+                gemGrid[i].push(3);
                 break;
                 case (random < 98):
-                console.log("place heart at col" + i + "and row" + j);
+                gemGrid[i].push(4);
                 break;
                 case (random < 100): //could also use default but reads weirdly
-                console.log("place star at col" + i + "and row" + j);
+                gemGrid[i].push(5);
                 break;
             }
         }
     }
 };
+
+/*var renderGems = function(){
+    for (var i = 0; i < 3; i++){
+        for (var j = 0; j < 5; j++){
+            var gemx = i * 83 + 53;
+            var gemy = j * 100;
+            var type = gemGrid[i][j];
+            var image;
+            switch(type){
+                case 1:
+                image = 'images/gem-blue.png';
+                break;
+                case 2:
+                image = 'images/gem-green.png';
+                break;
+                case 3:
+                image = 'images/gem-orange.png';
+                break;
+                case 4:
+                image = 'images/heart.png';
+                break;
+                case 5:
+                image = 'images/star.png';
+                break;
+                default:
+                image = 'images/gem-blue.png';
+            }
+            function renderGem(){
+                ctx.drawImage(Resources.get('images/gem-blue.png'), gemx, gemy);
+            };
+            renderGem();
+        }
+    }
+};*/
 
 // Enemies our player must avoid
 var Enemy = function() {
@@ -58,7 +90,7 @@ var Enemy = function() {
 };
 
 Enemy.prototype.initialize = function(){
-    this.speed = Math.random() * 1000 + 100; //make this a function of level? or make initialize a function of level
+    this.speed = Math.random() * 200 + 100; //make this a function of level? or make initialize a function of level
     this.x = -100;
     this.y = (Math.floor(Math.random() * 3 ) + 1) * 83 - 30; //choose random row
 };
@@ -98,42 +130,50 @@ var Player = function(){
 };
 
 Player.prototype.initialize = function(){
-    this.x = 200;
-    this.y = 83 * 4 + 53;
+    this.col = 2;
+    this.row = 4;
+    this.x = this.col * 100;
+    this.y = this.row * 83 + 53;
 };
 
 Player.prototype.handleInput = function(keypress){
     switch(keypress){
         case 'left':
-            this.x = this.x - 101;
+            this.col -= 1;
+            //this.x = this.x - 101;
             break;
         case 'right':
-            this.x = this.x + 101;
+            this.col += 1;
+            //this.x = this.x + 101;
             break;
         case 'up':
-            this.y = this.y - 83;
+            this.row -= 1;
+            //this.y = this.y - 83;
             break;
         case 'down':
-            this.y = this.y + 83;
+            this.row += 1;
+            //this.y = this.y + 83;
             break;
     }
 };
 
 Player.prototype.update = function(dt){
     //win if you reach the water
-    if (this.y <= -30){
+    if (this.row < 0){
         this.initialize();
     }
     //don't go off screen
-    else if(this.y > 83 * 4 + 53){
-        this.y = 83 * 4 + 53;
+    else if(this.row > 4){
+        this.row = 4;
     }
-    else if(this.x > 200 + 101 * 2){
-        this.x = 200 + 101 * 2;
+    else if(this.col > 4){
+        this.col = 4;
     }
-    else if(this.x < 200 - 101 * 2){
-        this.x = 200 - 101 * 2;
+    else if(this.col < 0){
+        this.col = 0;
     }
+    this.x = this.col * 100;
+    this.y = this.row * 83 + 53;
 };
 
 //could refactor into a general sprite render method
@@ -152,7 +192,7 @@ function checkCollisions(){
             //console.log('collision detected');
         }
     }
-};
+}
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
@@ -161,6 +201,7 @@ function checkCollisions(){
 //there are only three bugs on screen at any one time
 
 setGems();
+//renderGems();
 
 var bug1 = new Enemy();
 var bug2 = new Enemy();

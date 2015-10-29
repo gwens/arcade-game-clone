@@ -133,6 +133,26 @@ var Engine = (function(global) {
                  * we're using them over and over.
                  */
                 ctx.drawImage(Resources.get(rowImages[row]), col * 101, row * 83);
+                var gemType = gemGrid[row][col];
+                switch(gemType){
+                    case 0:
+                    break;
+                    case 1:
+                    ctx.drawImage(Resources.get('images/gem-blue.png'), col*101+25, row* 83+30, 50, 85);
+                    break;
+                    case 2:
+                    ctx.drawImage(Resources.get('images/gem-green.png'), col*101+25, row* 83+30, 50, 85);
+                    break;
+                    case 3:
+                    ctx.drawImage(Resources.get('images/gem-orange.png'), col*101+25, row* 83+30, 50, 85);
+                    break;
+                    case 4:
+                    ctx.drawImage(Resources.get('images/Heart.png'), col*101+25, row* 83+30, 50, 85);
+                    break;
+                    case 5:
+                    ctx.drawImage(Resources.get('images/Star.png'), col*101+25, row* 83+30, 50, 85);
+                    break;
+                }
             }
         }
 
@@ -151,6 +171,10 @@ var Engine = (function(global) {
         allEnemies.forEach(function(enemy) {
             enemy.render();
         });
+
+        /*gemGrid.forEach(function(gem){
+            gem.render();
+        });*/
 
         player.render();
     }
@@ -172,7 +196,12 @@ var Engine = (function(global) {
         'images/water-block.png',
         'images/grass-block.png',
         'images/enemy-bug.png',
-        'images/char-boy.png'
+        'images/char-boy.png',
+        'images/gem-blue.png',
+        'images/gem-green.png',
+        'images/gem-orange.png',
+        'images/Heart.png',
+        'images/Star.png'
     ]);
     Resources.onReady(init);
 
