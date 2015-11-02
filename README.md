@@ -1,6 +1,9 @@
-frontend-nanodegree-arcade-game
-===============================
+My version of the frontend-nanodegree-arcade-game
+To load, clone the directory and open index.html in a browser window
+or go to http://gwens.github.io/frontend-nanodegree-arcade-game/
 
-Students should use this rubric: https://www.udacity.com/course/viewer#!/c-ud015/l-3072058665/m-3072588797
-
-for self-checking their submission.
+To play, press the space bar to start, then use the arrow keys to move around the screen.
+To win a level, get across the road to the water without being hit by the enemy bugs.
+Collect gems to increase your score.
+Collect a heart to gain an extra life, or a star to be invincible for the rest of the level.
+See how high you can score!
