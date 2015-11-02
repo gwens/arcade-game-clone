@@ -95,6 +95,7 @@ var Engine = (function(global) {
             enemy.update(dt);
         });
         player.update();
+        popup.update();
     }
 
     /* This function initially draws the "game level", it will then call
@@ -133,6 +134,7 @@ var Engine = (function(global) {
                  * we're using them over and over.
                  */
                 ctx.drawImage(Resources.get(rowImages[row]), col * 101, row * 83);
+                //after drawing the board, draw the gems on top according to the current gemGrid
                 var gemType = gems.gemGrid[row][col];
                 switch(gemType){
                     case 0:
@@ -147,7 +149,7 @@ var Engine = (function(global) {
                     ctx.drawImage(Resources.get('images/gem-orange.png'), col*101+25, row* 83+30, 50, 85);
                     break;
                     case 4:
-                    ctx.drawImage(Resources.get('images/Heart.png'), col*101+25, row* 83+30, 50, 85);
+                    ctx.drawImage(Resources.get('images/Heart.png'), col*101+25, row* 83+40, 50, 85);
                     break;
                     case 5:
                     ctx.drawImage(Resources.get('images/Star.png'), col*101+25, row* 83+30, 50, 85);
@@ -159,10 +161,20 @@ var Engine = (function(global) {
 
         renderEntities();
 
-        ctx.font = "30px Arial";
-        var scoreBoardText = "Score: " + player.score + "  Lives: " + player.lives + "  Level: " + player.level;
-        ctx.clearRect(10, 50, 500, -40);
-        ctx.fillText(scoreBoardText,10,40);
+        //render scores and lives at top of screen
+        ctx.font = "30px serif";
+        ctx.fillStyle = "black";
+        ctx.textAlign = "left";
+        ctx.clearRect(10, 50, 500, -50);
+        ctx.fillText("LEVEL: " + player.level, 10, 38);
+        ctx.drawImage(Resources.get('images/gem-blue.png'), 194, 1, 25, 42);
+        ctx.fillText(player.score, 224, 38);
+        ctx.drawImage(Resources.get('images/Heart.png'), 294, 4, 25, 42);
+        ctx.fillText(player.lives, 324, 38);
+        //show a star if player is in invincibility mode
+        if (player.invincible == true){
+            ctx.drawImage(Resources.get('images/Star.png'), 394, -15, 40, 69);
+        }
     }
 
     /* This function is called by the render function and is called on each game
@@ -182,6 +194,7 @@ var Engine = (function(global) {
         });*/
 
         player.render();
+        popup.render();
     }
 
     /* This function does nothing but it could have been a good place to

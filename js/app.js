@@ -1,38 +1,26 @@
-//gems should appear randomly on the road at the beginning of each level
-//collecting a gem gives points that display in the top-right, next to a mini picture of a gem
-//points can be stored in the player object
-//gems can't be on top of each other
-//gems stored in a 5x3 array to represent the squares? 
-//Random number in each square, then cycle through and add relevant gem or object with a switch statement?
 
-//rows are at ROW * 83 - 30 (rows 1-3) or ROW * 83 + 53 (rows 0-2)
-//columns are at COLUMN * 100 (cols 1-5)
-//let's have heart, star, and 3 gems, and nothing, in proportions:
-//nothing: 9 0:49
-//blue gem: 3 50:69
-//green gem: 2 70:84
-//orange gem: 0.5 85:94
-//heart: 0.25 95:97
-//star: 0.25 98:99
-//random numbers from 0 to 99
+var gameState = 0; //0=not started, 1=playing, 2=game over
 
+//set of gems on the screen, including hearts (lives) and stars (invincibility)
 var Gems = function(){
     this.gemGrid = [[],[],[],[],[],[]]; //gemGrid[row][col]
     this.initialize();
 };
 
+//lay gems at random at the start of each level
 Gems.prototype.initialize = function(){
-    for (var i = 1; i < 4; i++){ //iterate over rows
-        for (var j = 0; j < 5; j++){
+    for (var i = 1; i < 4; i++){ //rows (only the paved ones)
+        for (var j = 0; j < 5; j++){ //columns
+            //choose whether each square should contain a gem, heart, star, or nothing
             var random = Math.floor(Math.random()*100);
             switch(true){
                 case (random < 50):
                 this.gemGrid[i][j] = 0;
                 break;
-                case (random < 70):
+                case (random < 75):
                 this.gemGrid[i][j] = 1;
                 break;
-                case (random < 85):
+                case (random < 90):
                 this.gemGrid[i][j] = 2;
                 break;
                 case (random < 95):
@@ -41,13 +29,15 @@ Gems.prototype.initialize = function(){
                 case (random < 98):
                 this.gemGrid[i][j] = 4;
                 break;
-                case (random < 100): //could also use default but reads weirdly
+                case (random < 100):
                 this.gemGrid[i][j] = 5;
                 break;
             }
         }
     }
 };
+
+
 
 // Enemies our player must avoid
 var Enemy = function() {
@@ -58,78 +48,83 @@ var Enemy = function() {
 };
 
 Enemy.prototype.initialize = function(){
-    this.speed = Math.random() * player.level * 100 + 100; //make this a function of level? or make initialize a function of level
+    if (gameState != 2){ //unless game over
+    this.speed = Math.random() * player.level * 100 + 100; //choose initial speed at random
+    }
+    else{
+        this.speed = 0;
+    }
     this.x = -100;
     this.y = (Math.floor(Math.random() * 3 ) + 1) * 83 - 30; //choose random row
 };
 
-// Update the enemy's position, required method for game
+// Update the enemy's position
 // Parameter: dt, a time delta between ticks
 Enemy.prototype.update = function(dt) {
-    // You should multiply any movement by the dt parameter
-    // which will ensure the game runs at the same speed for
-    // all computers.
-    
-    //if bug is off right of screen, move it back to left-hand side and initialize row and speed again
+    // multiply movement by dt to ensure the game runs at the same speed for all computers   
+    //if bug has moved off right of screen, move it back to the start and initialize row and speed again
     if (this.x > 550){
         this.initialize();
     }
     else{
-    //bugs move at a constant speed and do not affect each other (can overtake/overlap)
+    //bugs move at a constant speed and can overtake/overlap
         this.x = this.x + this.speed * dt;
     }                                                      
 };
 
-// Draw the enemy on the screen, required method for game
+// Draw the enemy on the screen
 Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
-// Now write your own player class
-// This class requires an update(), render() and
-// a handleInput() method.
 
-
+//Player the user controls
 var Player = function(){
     this.sprite = 'images/char-boy.png';
     this.initialize();
     this.width = 50;
     this.height = 60;
+    //player object will hold scores for the game
     this.score = 0;
     this.lives = 3;
     this.level = 1;
 };
 
 Player.prototype.initialize = function(){
+    //row and column variables for easier handling
     this.col = 2;
     this.row = 5;
     this.x = this.col * 100;
     this.y = this.row * 83 - 30;
+    this.invincible = false;
 };
 
 Player.prototype.handleInput = function(keypress){
+    if (gameState == 1){ //while playing the game
     switch(keypress){
         case 'left':
             this.col -= 1;
-            //this.x = this.x - 101;
             break;
         case 'right':
             this.col += 1;
-            //this.x = this.x + 101;
             break;
         case 'up':
             this.row -= 1;
-            //this.y = this.y - 83;
             break;
         case 'down':
             this.row += 1;
-            //this.y = this.y + 83;
             break;
+    }
+    }
+    else if (gameState == 0){ //to start the game
+        if (keypress == "space"){
+            gameState = 1;
+        }
     }
 };
 
 Player.prototype.update = function(dt){
-    //win if you reach the water
+    //win the level if you reach the water
     if (this.row == 0){
         player.level += 1;
         this.initialize();
@@ -155,16 +150,15 @@ Player.prototype.update = function(dt){
         this.score += 2;
         break;
         case 3:
-        this.score += 5;
+        this.score += 10;
         break;
         case 4:
         this.lives += 1;
         break;
         case 5:
-        //add code for invincibility
+        this.invincible = true;
         break;
     }
-    console.log("score is " + this.score + " lives " + this.lives);
     //cell is now empty
     gems.gemGrid[this.row][this.col] = 0;
     //update actual position
@@ -172,44 +166,77 @@ Player.prototype.update = function(dt){
     this.y = this.row * 83 - 30;
 };
 
-//could refactor into a general sprite render method
+//draw the player on screen
 Player.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    if (player.invincible == true){
+        //player is see-through when invincible
+        ctx.globalAlpha = 0.6;
+    }
+    if (gameState == 1){ //player only shows during gameplay
+        ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    }
+    ctx.globalAlpha = 1;
 };
+
+//start and end screen
+var Popup = function(){
+    this.options = ["PRESS [SPACE] TO START", "", "GAME OVER"];
+    this.content = "";
+    this.state = 0;
+}
+
+Popup.prototype.update = function(){
+    //choose appropriate text for start or end screen
+    this.state = gameState;
+    this.content = this.options[this.state];
+}
+
+//draw the popup on screen if gamestate is not-started or game over
+Popup.prototype.render = function(){
+    if (gameState != 1){
+        ctx.fillStyle = "white";
+        ctx.strokeStyle = "black";
+        ctx.lineWidth = 3;
+        ctx.strokeRect(52,252, 400, 90);
+        ctx.fillRect(52,252, 400, 90);
+        ctx.fillStyle = "black";
+        ctx.textAlign = "center";
+        ctx.font = "24px serif";
+        ctx.fillText(this.content, 252, 302);
+    }
+}
 
 
 function checkCollisions(){
-    for (i = 0; i < allEnemies.length; i++){
-        var enemy = allEnemies[i];
-        // bounding box collision detection
-        if (player.x < enemy.x + enemy.width  && player.x + enemy.width  > enemy.x &&
-        player.y < enemy.y + enemy.height && player.y + player.height > enemy.y) {
-            player.initialize();
-            //console.log('collision detected');
-            player.lives -= 1;
-            gems.initialize();
+    if(player.invincible == false && gameState == 1){
+        for (i = 0; i < allEnemies.length; i++){
+            var enemy = allEnemies[i];
+            // bounding box collision detection
+            if (player.x < enemy.x + enemy.width  && player.x + enemy.width  > enemy.x &&
+            player.y < enemy.y + enemy.height && player.y + player.height > enemy.y) {
+                player.lives -= 1;
+                if (player.lives == 0){
+                    gameState = 2; //game over
+                }
+                else{
+                    player.initialize();
+                    gems.initialize();
+                }
+            }
         }
     }
 }
 
-// Now instantiate your objects.
-// Place all enemy objects in an array called allEnemies
-// Place the player object in a variable called player          ////
 
-//there are only three bugs on screen at any one time
-
-//setGems();
-//renderGems();
 
 var gems = new Gems();
 var player = new Player();
+//there are only three bugs on screen at any one time
 var bug1 = new Enemy();
 var bug2 = new Enemy();
 var bug3 = new Enemy();
 var allEnemies = [bug1, bug2, bug3];
-
-
-
+var popup = new Popup();
 
 
 
@@ -220,8 +247,8 @@ document.addEventListener('keyup', function(e) {
         37: 'left',
         38: 'up',
         39: 'right',
-        40: 'down'
+        40: 'down',
+        32: 'space'
     };
-
     player.handleInput(allowedKeys[e.keyCode]);
 });
