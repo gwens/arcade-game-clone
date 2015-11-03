@@ -116,7 +116,7 @@ Player.prototype.handleInput = function(keypress){
             break;
     }
     }
-    else if (gameState == 0){ //to start the game
+    else if (gameState === 0){ //to start the game
         if (keypress == "space"){
             gameState = 1;
         }
@@ -125,8 +125,8 @@ Player.prototype.handleInput = function(keypress){
 
 Player.prototype.update = function(dt){
     //win the level if you reach the water
-    if (this.row == 0){
-        player.level += 1;
+    if (this.row === 0){
+        this.level += 1;
         this.initialize();
         gems.initialize();
     }
@@ -168,7 +168,7 @@ Player.prototype.update = function(dt){
 
 //draw the player on screen
 Player.prototype.render = function() {
-    if (player.invincible == true){
+    if (this.invincible === true){
         //player is see-through when invincible
         ctx.globalAlpha = 0.6;
     }
@@ -183,13 +183,13 @@ var Popup = function(){
     this.options = ["PRESS [SPACE] TO START", "", "GAME OVER"];
     this.content = "";
     this.state = 0;
-}
+};
 
 Popup.prototype.update = function(){
     //choose appropriate text for start or end screen
     this.state = gameState;
     this.content = this.options[this.state];
-}
+};
 
 //draw the popup on screen if gamestate is not-started or game over
 Popup.prototype.render = function(){
@@ -204,18 +204,18 @@ Popup.prototype.render = function(){
         ctx.font = "24px serif";
         ctx.fillText(this.content, 252, 302);
     }
-}
+};
 
 
 function checkCollisions(){
-    if(player.invincible == false && gameState == 1){
+    if(player.invincible === false && gameState == 1){
         for (i = 0; i < allEnemies.length; i++){
             var enemy = allEnemies[i];
             // bounding box collision detection
             if (player.x < enemy.x + enemy.width  && player.x + enemy.width  > enemy.x &&
             player.y < enemy.y + enemy.height && player.y + player.height > enemy.y) {
                 player.lives -= 1;
-                if (player.lives == 0){
+                if (player.lives === 0){
                     gameState = 2; //game over
                 }
                 else{

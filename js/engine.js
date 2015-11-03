@@ -172,7 +172,7 @@ var Engine = (function(global) {
         ctx.drawImage(Resources.get('images/Heart.png'), 294, 4, 25, 42);
         ctx.fillText(player.lives, 324, 38);
         //show a star if player is in invincibility mode
-        if (player.invincible == true){
+        if (player.invincible === true){
             ctx.drawImage(Resources.get('images/Star.png'), 394, -15, 40, 69);
         }
     }
