@@ -134,26 +134,6 @@ var Engine = (function(global) {
                  * we're using them over and over.
                  */
                 ctx.drawImage(Resources.get(rowImages[row]), col * 101, row * 83);
-                //after drawing the board, draw the gems on top according to the current gemGrid
-                var gemType = gems.gemGrid[row][col];
-                switch(gemType){
-                    case 0:
-                    break;
-                    case 1:
-                    ctx.drawImage(Resources.get('images/gem-blue.png'), col*101+25, row* 83+30, 50, 85);
-                    break;
-                    case 2:
-                    ctx.drawImage(Resources.get('images/gem-green.png'), col*101+25, row* 83+30, 50, 85);
-                    break;
-                    case 3:
-                    ctx.drawImage(Resources.get('images/gem-orange.png'), col*101+25, row* 83+30, 50, 85);
-                    break;
-                    case 4:
-                    ctx.drawImage(Resources.get('images/Heart.png'), col*101+25, row* 83+40, 50, 85);
-                    break;
-                    case 5:
-                    ctx.drawImage(Resources.get('images/Star.png'), col*101+25, row* 83+30, 50, 85);
-                    break;
                 }
             }
         }
@@ -172,10 +152,9 @@ var Engine = (function(global) {
         ctx.drawImage(Resources.get('images/Heart.png'), 294, 4, 25, 42);
         ctx.fillText(player.lives, 324, 38);
         //show a star if player is in invincibility mode
-        if (player.invincible == true){
+        if (player.invincible === true){
             ctx.drawImage(Resources.get('images/Star.png'), 394, -15, 40, 69);
         }
-    }
 
     /* This function is called by the render function and is called on each game
      * tick. It's purpose is to then call the render functions you have defined
@@ -185,13 +164,11 @@ var Engine = (function(global) {
         /* Loop through all of the objects within the allEnemies array and call
          * the render function you have defined.
          */
+        gems.render();
+        
         allEnemies.forEach(function(enemy) {
             enemy.render();
         });
-
-        /*gemGrid.forEach(function(gem){
-            gem.render();
-        });*/
 
         player.render();
         popup.render();
