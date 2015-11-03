@@ -1,10 +1,10 @@
-My version of the Udacity's frontend nanodegree arcade game clone
+My version of Udacity's frontend nanodegree arcade game clone
 
-#To Load the Game
+##To Load the Game
 To load, clone the directory and open index.html in a browser window
 or go to the version hosted on [Github Pages](http://gwens.github.io/frontend-nanodegree-arcade-game/)
 
-#To Play the Game
+##To Play the Game
 To play, press the **space bar** to start, then use the **arrow keys** to move around the screen.
 To win a level, get across the road to the water without being hit by the enemy bugs.
 Collect **gems** to increase your score.
